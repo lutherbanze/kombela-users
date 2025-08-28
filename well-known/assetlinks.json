@@ -1,0 +1,15 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls",
+      "delegate_permission/common.get_login_creds"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.kombela.app",
+      "sha256_cert_fingerprints": [
+        "7E:2A:C4:DD:4C:8D:2A:D6:47:71:AA:45:E4:35:8A:26:9A:76:55:F9:11:B2:34:EB:9E:6E:D8:FB:1F:2D:84:2C"
+      ]
+    }
+  }
+]
