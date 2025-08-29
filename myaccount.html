@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedido de Exclusão de Conta - Kombela</title>
+    <!-- Incluindo Tailwind CSS para um design moderno -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Usando a fonte Montserrat -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Usando a fonte Montserrat para o corpo do texto */
+        body {
+            font-family: 'Montserrat', sans-serif;
+        }
+        /* Estilo para o botão desativado */
+        .disabled-btn {
+            cursor: not-allowed;
+            background-color: #a3a3a3; /* Um cinza para o botão desativado */
+            color: #e5e5e5;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+    <!-- Container do Formulário (inicialmente visível) -->
+    <div id="form-wrapper" class="bg-[#0E8143] p-8 rounded-lg shadow-lg max-w-2xl w-full m-4">
+        
+        <!-- Card interno -->
+        <div id="form-container" class="bg-white p-8 rounded-md">
+            
+            <!-- Conteúdo do Formulário -->
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">Exercite os seus Direitos</h1>
+                <p class="text-gray-600 mt-2">Obrigado pelo seu contacto. Por favor, preencha o formulário abaixo para submeter o seu pedido.</p>
+
+                <form id="delete-form" class="mt-8">
+                    <div class="space-y-6">
+                        
+                        <div>
+                            <label for="request-type" class="block text-sm font-medium text-gray-700">
+                                Tipo de Pedido*
+                            </label>
+                            <select 
+                                id="request-type" 
+                                name="request-type"
+                                class="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm focus:outline-none sm:text-sm"
+                                disabled
+                            >
+                                <option selected>Pedido de Exclusão de Conta</option>
+                            </select>
+                            <p class="mt-1 text-xs text-gray-500">Esta página destina-se exclusivamente a pedidos de exclusão de conta.</p>
+                        </div>
+
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700">
+                                Seu E-mail*
+                            </label>
+                            <input 
+                                type="email" 
+                                id="email" 
+                                name="email"
+                                required
+                                class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#0E8143] focus:border-[#0E8143] sm:text-sm"
+                                placeholder="voce@exemplo.com"
+                            >
+                        </div>
+
+                        <div>
+                            <label for="confirmation" class="block text-sm font-medium text-gray-700">
+                                Para confirmar, digite <strong class="text-gray-900">EXCLUIR</strong>
+                            </label>
+                            <input 
+                                type="text" 
+                                id="confirmation" 
+                                name="confirmation"
+                                class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
+                                placeholder="EXCLUIR"
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Botões de Ação -->
+                    <div class="mt-8 flex flex-col space-y-4">
+                        <button 
+                            id="deleteButton"
+                            type="submit"
+                            disabled
+                            class="w-full inline-flex justify-center py-3 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled-btn transition-colors duration-300"
+                        >
+                            Submeter Pedido de Exclusão
+                        </button>
+                        <a href="#" class="w-full text-center py-3 px-4 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition-colors duration-300">
+                            Cancelar
+                        </a>
+                    </div>
+                </form>
+
+                <div class="mt-8 text-center">
+                    <p class="text-sm text-gray-500">Equipa de Privacidade Kombela</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Página de Status do Pedido (inicialmente oculta) -->
+    <div id="status-page" class="hidden text-center p-8">
+        <div class="bg-white p-12 rounded-lg shadow-lg max-w-md w-full">
+            <!-- Ícone de Spinner -->
+            <svg class="animate-spin h-10 w-10 text-[#0E8143] mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <h2 class="mt-6 text-2xl font-bold text-gray-800">Pedido enviado, aguarde...</h2>
+            <p class="mt-2 text-gray-600">O seu pedido está a ser processado. Será notificado por e-mail.</p>
+        </div>
+    </div>
+
+
+    <script>
+        // Seleciona os elementos do DOM
+        const confirmationInput = document.getElementById('confirmation');
+        const emailInput = document.getElementById('email');
+        const deleteButton = document.getElementById('deleteButton');
+        const deleteForm = document.getElementById('delete-form');
+        const formWrapper = document.getElementById('form-wrapper');
+        const statusPage = document.getElementById('status-page');
+        
+        // Palavra-chave para confirmação
+        const confirmationKeyword = 'EXCLUIR';
+
+        // Função para validar o formulário e ativar o botão de submissão
+        function validateForm() {
+            const isEmailValid = emailInput.checkValidity();
+            const isConfirmationCorrect = confirmationInput.value === confirmationKeyword;
+
+            // Ativa o botão apenas se o e-mail for válido E a palavra de confirmação estiver correta
+            if (isEmailValid && isConfirmationCorrect) {
+                deleteButton.disabled = false;
+                deleteButton.classList.remove('disabled-btn');
+                deleteButton.classList.add('hover:bg-red-700');
+            } else {
+                deleteButton.disabled = true;
+                deleteButton.classList.add('disabled-btn');
+                deleteButton.classList.remove('hover:bg-red-700');
+            }
+        }
+
+        // Adiciona ouvintes de evento aos campos para validar em tempo real
+        confirmationInput.addEventListener('input', validateForm);
+        emailInput.addEventListener('input', validateForm);
+        
+        // Lida com o evento de submissão do formulário
+        deleteForm.addEventListener('submit', (event) => {
+            event.preventDefault(); // Impede o envio padrão do formulário, que recarregaria a página
+            
+            // Verifica novamente se o botão não está desativado antes de prosseguir
+            if (!deleteButton.disabled) {
+                console.log('Pedido de exclusão submetido para o e-mail:', emailInput.value);
+                
+                // Esconde o formulário e mostra a página de status para simular a navegação
+                formWrapper.classList.add('hidden');
+                statusPage.classList.remove('hidden');
+            }
+        });
+    </script>
+
+</body>
+</html>
