@@ -1,11 +1,80 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Kombela Deep Link</title>
-    <meta http-equiv="refresh" content="0; url=kombela://detalhes_produto?item=Franginho">
-  </head>
-  <body>
-    <p>Se não abriu o app, <a href="kombela://detalhes_produto?item=Franginho">clica aqui</a>.</p>
-  </body>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Kombela Deep Link</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- 🔗 Metadados de pré-visualização (Open Graph + Twitter) -->
+  <meta property="og:title" content="Kombela - Tudo que precisas, entregue rápido" />
+  <meta property="og:description" content="Compra comida, produtos de supermercado e eletrônicos leves no Kombela. Entregas rápidas e seguras em Moçambique." />
+  <meta property="og:url" content="https://kombela.online" />
+  <meta property="og:image" content="https://kombela.online/assets/kombela-preview.png" />
+  <meta property="og:type" content="website" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Kombela - Tudo que precisas, entregue rápido" />
+  <meta name="twitter:description" content="Compra comida, produtos de supermercado e eletrônicos leves no Kombela. Entregas rápidas e seguras em Moçambique." />
+  <meta name="twitter:image" content="https://kombela.online/assets/kombela-preview.png" />
+
+  <style>
+    body { font-family: system-ui, sans-serif; padding: 24px; }
+    a { word-break: break-all; }
+  </style>
+
+  <script>
+    function buildDeepLinkUrl() {
+      const url = new URL(window.location.href);
+      const pagina = url.searchParams.get('pagina') || 'home';
+      url.searchParams.delete('pagina');
+      const base = `kombela://${pagina}`;
+      const rest = url.searchParams.toString();
+      return rest ? `${base}?${rest}` : base;
+    }
+
+    function buildAndroidIntent(deepLinkUrl) {
+      const packageName = 'com.kombela.app';
+      return `intent://${deepLinkUrl.replace('kombela://', '')}#Intent;scheme=kombela;package=${packageName};end`;
+    }
+
+    const PLAY_STORE = 'https://play.google.com/store/apps/details?id=com.kombela.app';
+    const APP_STORE  = 'https://apps.apple.com/app/id6747911946';
+
+    function isIOS() {
+      return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    }
+
+    function openApp() {
+      const deep = buildDeepLinkUrl();
+      document.getElementById('deepLink').textContent = deep;
+      document.getElementById('deepLink').setAttribute('href', deep);
+
+      let timer;
+      const start = Date.now();
+
+      if (isIOS()) {
+        window.location.href = deep;
+        timer = setTimeout(() => {
+          if (Date.now() - start < 1800) window.location.href = APP_STORE;
+        }, 1500);
+      } else {
+        const intentUrl = buildAndroidIntent(deep);
+        window.location.href = intentUrl;
+        setTimeout(() => {
+          window.location.href = deep;
+          setTimeout(() => {
+            if (Date.now() - start < 2500) window.location.href = PLAY_STORE;
+          }, 1200);
+        }, 300);
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', openApp);
+  </script>
+</head>
+<body>
+  <h1>Abrindo o Kombela…</h1>
+  <p>Se o app não abrir automaticamente, toque aqui: <a id="deepLink" href="#">Abrir no app</a></p>
+  <p>Se ainda não tiver o app, você será redirecionado para a loja.</p>
+</body>
 </html>
